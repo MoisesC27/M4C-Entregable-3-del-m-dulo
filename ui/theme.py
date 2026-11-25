@@ -6,11 +6,23 @@ from html import escape
 import streamlit as st
 
 COLORS = {
-    "bg": "#F3F5F8", "panel": "#FFFFFF", "soft": "#EEF1F5", "border": "#DDE2EA",
-    "text": "#17202C", "muted": "#5D6878", "blue": "#2456A6", "blue_soft": "#E3EBF8",
-    "green": "#1D8A4E", "green_soft": "#E1F3E8", "amber": "#B7791F", "amber_soft": "#FBF0DB",
-    "red": "#C43D3D", "red_soft": "#F9E2E2", "grey": "#9AA4B2",
+    "bg": "#F3F5F8",
+    "panel": "#FFFFFF",
+    "soft": "#EEF1F5",
+    "border": "#DDE2EA",
+    "text": "#17202C",
+    "muted": "#5D6878",
+    "blue": "#2456A6",
+    "blue_soft": "#E3EBF8",
+    "green": "#166534",
+    "green_soft": "#E1F3E8",
+    "amber": "#8A4B0F",
+    "amber_soft": "#FBF0DB",
+    "red": "#A72626",
+    "red_soft": "#F9E2E2",
+    "grey": "#697586",
 }
+
 C = COLORS
 
 STATES = {"ok": "✓", "warn": "!", "bad": "✕"}
