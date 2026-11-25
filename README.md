@@ -1,3 +1,5 @@
+https://airlincoln-entregable3.streamlit.app/
+
 # Air Lincoln · Inteligencia de No-show (Streamlit)
 
 ## Ejecutar en Visual Studio Code (Windows)
