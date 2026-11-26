@@ -41,9 +41,32 @@ En cada push y pull request, GitHub Actions (`.github/workflows/validar-datos.ym
 
 Si el dato se rompe (texto en una columna numérica, código fuera de rango, columna faltante, variable derivada incoherente), la corrida queda en rojo y el cambio se detiene. El contrato está en [`contrato-datos.md`](contrato-datos.md).
 
-### Prueba de que detiene un cambio malo
+### Evidencia de validación y corrección del pipeline
 
-**Corrida que falló:** `PEGAR AQUÍ LA LIGA A LA CORRIDA EN ROJO`
+**Validación automática WCAG**
+
+Se implementó un workflow de GitHub Actions para verificar los contrastes de color del dashboard.
+
+La primera ejecución presentó un error de configuración: `No event triggers defined in on`. El workflow fue corregido y las ejecuciones posteriores finalizaron correctamente.
+
+**Ejecución aprobada:**
+[Ver GitHub Actions WCAG #8](https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/45736483277)
+
+**Error inicial de configuración:**
+[Ver GitHub Actions WCAG #1](https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/45721594481)
+
+**Validación de datos**
+
+El proyecto incluye validaciones de estructura, tipos de datos y valores antes de utilizar los archivos en el dashboard.
+
+Se documentó un caso de prueba que consiste en cambiar un valor `0` por el texto `abc` en la columna `No_Show`, utilizando la rama `prueba-dato-roto`.
+
+Aunque se describió el procedimiento, todavía no se ha verificado en este repositorio una ejecución fallida específica que demuestre el rechazo automático de ese dato.
+
+**Conclusión:** La validación automatizada de contraste WCAG tiene ejecuciones aprobadas. La evidencia de rechazo de datos incorrectos mediante GitHub Actions queda pendiente de verificación.
+
+
+**Conclusión:** El pipeline de contraste WCAG cuenta con ejecuciones aprobadas. La evidencia de rechazo automático de datos incorrectos queda pendiente de verificación.
 
 Cómo se rompió a propósito:
 1. Rama `prueba-dato-roto`: en la fila 6 del CSV, `No_Show` se cambió de `0` a `abc`.
