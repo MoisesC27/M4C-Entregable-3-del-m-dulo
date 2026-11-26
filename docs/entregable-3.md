@@ -396,6 +396,26 @@ La restricción de modificación del umbral también está implementada en `app.
 
 **Pendiente:** realizar una prueba funcional negativa de modificación no autorizada para comprobar la protección más allá de la interfaz.
 
+### Prueba negativa de permisos sobre el umbral
+
+Se reforzó la función `set_threshold()` en `core/settings.py` para comprobar que únicamente el usuario `anna` pueda guardar modificaciones del umbral de alertas.
+
+La validación se realiza también en `app.py`, antes de llamar a la función de almacenamiento.
+
+Se ejecutaron dos pruebas funcionales desde Python:
+
+| Usuario | Operación probada | Resultado |
+|---|---|---|
+| Laura | Intentar modificar el umbral | Acceso denegado mediante `PermissionError` |
+| Armando | Intentar modificar el umbral | Acceso denegado mediante `PermissionError` |
+
+**Resultado:** ambos intentos fueron rechazados antes de guardar los cambios.
+
+**Evidencia técnica:** commit `e59cfd6` del repositorio de GitHub.
+
+**Limitación:** esta prueba verifica la restricción implementada en la función de almacenamiento; no representa una auditoría completa de autenticación y seguridad.
+
+
 ### Evidencia de pruebas por usuario
 
 Se realizaron pruebas de acceso a AIRLINCOLN con los tres perfiles configurados.
