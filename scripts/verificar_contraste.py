@@ -41,7 +41,8 @@ def leer_tema_python():
 
 
 def leer_temas_html():
-    ruta = ROOT / "ui" / "dashboard_template.html"
+    ruta = ROOT / "ui" / "component" / "index.html"
+
     contenido = ruta.read_text(encoding="utf-8")
 
     selectores = {
