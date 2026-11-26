@@ -1,7 +1,6 @@
-https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/NUMERO_DE_LA_EJECUCION
+https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/45735627527
 
 # Entregable 3 — AIRLINCOLN
-
 
 ## 1. Preguntas de las gráficas
 
@@ -14,8 +13,8 @@ operativo de las ausencias de pasajeros.
 | Visualización | Pregunta de negocio | Decisión |
 |---|---|---|
 | Costo esperado de sobreventa | ¿Cuántos boletos adicionales minimizan el costo esperado del vuelo? | Seleccionar una cantidad de sobreventa considerando los costos y riesgos. |
-| Mapa de riesgo | ¿Qué días y horarios tienen más no-show? | Identificar los periodos que requieren mayor atención. |
-| Combinaciones de vuelos | ¿Qué combinaciones de vuelos presentan mayor riesgo previsto de No-Show? | Priorizar escenarios para su revisión operativa. |
+| Calendario de vuelos | ¿Qué días y horarios presentan mayor tasa de No-Show? | Identificar las fechas y los horarios con mayores tasas de ausencia para planificar los vuelos. |
+| Vuelos del día | ¿Qué vuelos de la fecha seleccionada requieren mayor atención por su riesgo de No-Show? | Identificar los vuelos que necesitan revisión y seleccionar uno para planificar su sobreventa en el simulador. |
 
 ### Armando — Experiencia del pasajero
 
