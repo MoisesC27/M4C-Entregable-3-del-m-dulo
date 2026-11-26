@@ -156,7 +156,153 @@ La jerarquía visual de AIRLINCOLN busca que los usuarios pasen de **identificar
 
 Esto reduce la necesidad de interpretar información técnica y permite que cada perfil se concentre en las herramientas relacionadas con sus responsabilidades.
 ## 4. Estado vacío y st.stop()
+### Control del estado vacío
 
+AIRLINCOLN contempla el estado en el que el usuario todavía no ha seleccionado un archivo de datos.
+
+El comportamiento esperado consiste en mostrar un mensaje indicando que se debe cargar un archivo Excel o CSV, o seleccionar el conjunto de datos de ejemplo.
+
+Cuando no existe una fuente de datos seleccionada, la aplicación debe detener el procesamiento mediante `st.stop()`, evitando ejecutar modelos o generar resultados sin información válida.
+
+### Validación requerida
+
+Para comprobar este comportamiento se realizarán las siguientes verificaciones:
+
+1. Abrir AIRLINCOLN sin cargar un archivo.
+2. Confirmar que aparece el mensaje correspondiente.
+3. Verificar que no se ejecutan las operaciones que requieren datos.
+4. Identificar en el código la condición que utiliza `st.stop()`.
+
+**Evidencia:** agregar una captura de la pantalla sin datos y otra del fragmento de código que implementa la detención.
+
+**Estado:** pendiente de confirmar mediante la revisión de `app.py` y una prueba funcional.
 ## 5. Controles vinculados al negocio
+### Control 1. Simulador de sobreventa
 
+**Pregunta de negocio:** ¿Cuántos boletos adicionales conviene vender para reducir las pérdidas por asientos vacíos sin incrementar excesivamente el riesgo de negar abordaje?
+
+El simulador permite a Laura seleccionar el día, horario, tipo de salida, destino y condiciones del clima. También permite modificar la capacidad del avión y los costos operativos.
+
+A partir del escenario seleccionado, AIRLINCOLN muestra la sobreventa recomendada, la probabilidad estimada de No-Show, el riesgo de negar abordaje y el ahorro esperado.
+
+**Ejemplo observado:** para el escenario seleccionado, el sistema recomienda vender 30 boletos adicionales sobre una capacidad de 180 asientos y estima un ahorro de $58,840 MXN frente a no sobrevender.
+
+**Decisión:** comparar escenarios y elegir una estrategia de sobreventa basada en costos y riesgos.
+
+### Control 2. Calendario interactivo de vuelos
+
+**Pregunta de negocio:** ¿Qué fechas y vuelos requieren mayor atención por presentar riesgos de ausencia?
+
+El calendario permite seleccionar fechas y consultar información de vuelos relacionada con la fecha elegida.
+
+Al seleccionar un día, el panel lateral presenta los vuelos correspondientes, sus horarios, rutas, capacidad y estimaciones de No-Show.
+
+**Ejemplo observado:** al seleccionar el domingo 30 de agosto de 2026, el panel muestra 24 vuelos en la sección de mañana, con sus indicadores individuales.
+
+**Decisión:** identificar los vuelos que requieren revisión y evaluar su planificación o sobreventa.
+
+### Visibilidad de los controles
+
+Los controles muestran sus valores seleccionados y los indicadores se presentan junto con el escenario analizado.
+
+El dashboard también distingue entre datos originales, resultados calculados y escenarios simulados mediante las etiquetas DATO, CALCULADO y SIMULADO.
+
+### Validación pendiente
+
+Se debe realizar una prueba funcional cambiando al menos un valor de cada control y comprobando que se actualicen los resultados relacionados.
+
+También debe confirmarse que la interfaz muestre el número de registros correspondientes al filtro activo y no solamente el total histórico del archivo.
+
+### Evidencias
+
+- Captura del simulador de sobreventa con los filtros seleccionados y sus indicadores.
+- Captura del calendario con una fecha seleccionada y los vuelos correspondientes.
+- Capturas comparativas que demuestren la actualización de resultados al cambiar los controles.
+### Pruebas funcionales realizadas
+
+Se realizaron pruebas modificando los controles del simulador y seleccionando distintas fechas y vuelos en el calendario.
+
+**Prueba 1. Simulador de sobreventa**
+
+En un escenario inicial, el sistema recomendó 30 boletos adicionales y calculó un ahorro estimado de $58,840 MXN.
+
+Al cambiar las características del escenario, la recomendación pasó a 27 boletos adicionales y el ahorro estimado a $51,237 MXN.
+
+Esto demuestra que el simulador actualiza sus resultados conforme a los parámetros seleccionados.
+
+**Prueba 2. Calendario de vuelos**
+
+Se seleccionaron diferentes fechas del calendario y se comprobó que el panel de vuelos cambia según la fecha elegida.
+
+Para el jueves 11 de junio de 2026 se observaron 26 vuelos en la sección de mañana, con una tasa de No-Show del 23 % para ese grupo.
+
+Al seleccionar un vuelo, sus características se transfirieron al simulador, permitiendo evaluar la sobreventa correspondiente.
+
+**Conclusión**
+
+Ambos controles permiten explorar situaciones operativas y utilizar los resultados para apoyar decisiones de planificación. Los filtros seleccionados son visibles y se muestran conteos de vuelos y pasajeros en distintos niveles de detalle.
 ## 6. Autenticación, roles y limitaciones
+### Sistema de autenticación
+
+AIRLINCOLN incorpora un inicio de sesión individual mediante nombre de usuario y contraseña.
+
+El sistema utiliza el módulo `core/auth.py` para verificar las credenciales antes de permitir el acceso a la aplicación. Las contraseñas se comprueban mediante hashes PBKDF2, y las credenciales se configuran de forma privada mediante Streamlit Secrets.
+
+La aplicación cuenta con tres perfiles que corresponden a diferentes necesidades operativas.
+
+### Matriz de acceso por roles
+
+| Función | Laura — Planificación | Armando — Experiencia del pasajero | Anna — Operación y calidad |
+|---|---|---|---|
+| Iniciar sesión | Sí | Sí | Sí |
+| Cargar y analizar datos | Sí | Sí | Sí |
+| Simulador de sobreventa | Sí | No | No |
+| Calendario de vuelos | Sí | No | No |
+| Priorización de contactos | No | Sí | No |
+| Análisis de grupos de riesgo | No | Sí | No |
+| Evaluación de modelos | No | No | Sí |
+| Revisión de calidad de datos | No | No | Sí |
+| Ajustar el umbral oficial de alertas | No | No | Sí |
+
+### Diferenciación funcional
+
+**Laura — Planificación**
+
+Accede al simulador de sobreventa y al calendario de vuelos. Su función consiste en evaluar escenarios de costos, identificar fechas de riesgo y decidir cuántos boletos adicionales conviene vender.
+
+**Armando — Experiencia del pasajero**
+
+Accede a herramientas enfocadas en identificar pasajeros y grupos con mayor riesgo de ausencia. Su función consiste en priorizar el seguimiento preventivo y revisar los casos que requieren atención.
+
+**Anna — Operación y calidad**
+
+Accede a herramientas para evaluar la confiabilidad del modelo, revisar la calidad de los datos y ajustar el umbral de alerta. El umbral autorizado por Anna se utiliza en los análisis de los diferentes perfiles.
+
+### Implementación técnica
+
+La aplicación verifica la identidad del usuario antes de mostrar el dashboard.
+
+El usuario autenticado se conserva durante la sesión y se utiliza para construir el contenido correspondiente a su perfil.
+
+En `app.py`, la función `dashboard()` obtiene el usuario autenticado y utiliza `build_payload(ctx, user, lock=True, threshold=thr)` para preparar los datos del dashboard.
+
+La actualización del umbral se restringe mediante una comprobación del usuario `anna`, evitando que otros perfiles lo modifiquen a través de esa operación.
+
+### Limitaciones
+
+La autenticación y los permisos están diseñados para los tres perfiles definidos en el proyecto académico.
+
+El sistema no incorpora una plataforma empresarial de administración de identidades, recuperación automática de contraseñas ni auditoría integral de todas las acciones.
+
+La diferenciación visual entre perfiles debe complementarse con verificaciones de autorización en las operaciones sensibles.
+
+Las credenciales privadas deben permanecer fuera del repositorio público.
+
+### Evidencia pendiente
+
+Se realizarán pruebas iniciando sesión con cada perfil para confirmar que:
+
+1. Laura accede a planificación y sobreventa.
+2. Armando accede al seguimiento de pasajeros.
+3. Anna accede a la evaluación del modelo y al ajuste de alertas.
+4. Los usuarios no pueden modificar el umbral oficial sin contar con el permiso correspondiente.
