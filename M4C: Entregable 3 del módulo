@@ -1,0 +1,96 @@
+# Entregable 3 · Dashboard Interactivo de Inteligencia de No-Show (Air Lincoln)
+
+En este entregable consolidamos el diseño y la implementación de nuestro tablero interactivo en Streamlit para la gestión operativa del riesgo de *no-show* en Air Lincoln. En lugar de concentrar toda la información en una sola pantalla saturada, estructuramos la aplicación en tres vistas especializadas por rol —Planificación, Experiencia del pasajero y Operación y calidad—, asegurando que cada perfil reciba exactamente las métricas, controles y nivel de detalle necesarios para tomar decisiones oportunas sin comprometer la privacidad de los pasajeros ni la integridad del modelo.
+
+
+1. Catálogo de visualizaciones y pregunta que responde cada una
+
+Al diseñar el módulo de gráficas (`ui/charts.py`), definimos que cada visualización debía responder una pregunta concreta de negocio y aportar evidencia directa para la operación diaria. De esta manera evitamos gráficos puramente decorativos y vinculamos cada vista con las decisiones reales de Laura, Armando y Anna.
+
+| Rol | Visualización | Componente | Pregunta de negocio que responde |
+| :--- | :--- | :--- | :--- |
+| **Laura** (Planificación) | Curva de costo esperado por boletos extra | `charts.cost_curve` | ¿Cuántos boletos extra conviene sobrevender para minimizar el costo total esperado (asientos vacíos más abordajes negados) sin rebasar nuestra tolerancia de riesgo? |
+| **Laura** (Planificación) | Mapa de riesgo histórico (día × horario) | `charts.heatmap` | ¿Qué combinaciones de día de salida y franja horaria concentran las tasas históricas más altas de *no-show* con respaldo muestral suficiente ($n \ge 30$)? |
+| **Armando** (Experiencia) | Tasa de *no-show* observada por segmento | `charts.segment_bars` | ¿Qué segmentos de pasajeros superan el promedio global de *no-show* con evidencia estadística clara y no por variación de muestra pequeña? |
+| **Armando** (Experiencia) | Peso de cada variable en el modelo | `charts.importance_bars` | ¿Qué características del pasajero o del vuelo tienen mayor peso predictivo dentro de la regresión logística al estimar el riesgo? |
+| **Armando** (Experiencia) | Contribuciones individuales (log-odds) | `charts.contrib_bars` | Para un pasajero en particular, ¿cuáles son los 8 factores que más aumentan o reducen su probabilidad estimada de no presentarse? |
+| **Anna** (Operación y calidad) | Comparativa de AUC en prueba (IC 95%) | `charts.auc_dots` | ¿Qué modelo candidato distingue mejor a los pasajeros que faltan en datos no vistos y si su ventaja frente a los demás es estadísticamente significativa? |
+| **Anna** (Operación y calidad) | Curva de calibración en prueba | `charts.calibration` | ¿Qué tan realistas y confiables son las probabilidades que entrega el modelo frente a las frecuencias reales observadas (ECE)? |
+| **Anna** (Operación y calidad) | Equilibrio de umbral (VP vs. FP) | `charts.threshold_tradeoff` | ¿Cuántas falsas alarmas adicionales asumimos al ajustar el umbral para capturar más *no-shows* reales? |
+
+Complementamos estas visualizaciones con una matriz de confusión accesible en HTML (`role="table"`, `aria-label="Matriz de confusión"`) en la vista de Anna, acompañada de una verificación automática de suma exacta contra el tamaño de la partición, y con supresión primaria y complementaria (`security.suppress` y `security.complementary_suppression`) en el mapa de calor de Laura para ocultar celdas con menos de 30 pasajeros. Con este catálogo logramos que cada gráfica cumpla un propósito analítico claro y respalde directamente las acciones de su respectivo rol.
+
+
+2. Paleta de colores y verificación de contraste (WCAG 2.2 AA)
+
+Para la identidad visual del tablero seleccionamos una paleta institucional sobria basada en azul pizarra sobre superficies claras, verificando matemáticamente las razones de contraste bajo el estándar WCAG 2.2 AA. Además, incorporamos codificación redundante en todos los estados críticos combinando color, iconos (`✓`, `!`, `✕`, `▲`) y etiquetas textuales explícitas para garantizar una lectura accesible incluso para usuarios con daltonismo o baja visión.
+
+| Uso en la interfaz | Color frontal (HEX) | Color de fondo (HEX) | Razón de contraste | Cumplimiento WCAG 2.2 AA |
+| :--- | :---: | :---: | :---: | :--- |
+| Botón primario y controles (`LOGIN`) | `#FFFFFF` | `#3F5675` | **7.49 : 1** | Cumple AA y AAA (texto normal) |
+| Encabezado de acceso sobre fondo general | `#3F5675` | `#E9EEF5` | **6.43 : 1** | Cumple AA (texto normal) |
+| Campos de entrada (`Username` / `Password`) | `#FFFFFF` | `#4A6080` | **6.41 : 1** | Cumple AA (texto normal) |
+| Texto secundario, notas y metadatos | `#5D6878` | `#FFFFFF` | **5.65 : 1** | Cumple AA (texto normal) |
+| Estado de error / riesgo alto (`✕`, `bad`) | `#C43D3D` | `#FFFFFF` | **5.14 : 1** | Cumple AA (texto normal) |
+| Estado correcto / riesgo bajo (`✓`, `ok`) | `#1D8A4E` | `#FFFFFF` | **4.38 : 1** | Cumple AA (texto grande y componentes UI $\ge 3:1$) |
+| Estado de advertencia / riesgo medio (`!`, `warn`) | `#B7791F` | `#FFFFFF` | **3.64 : 1** | Cumple AA (texto grande y componentes UI $\ge 3:1$) |
+
+Al validar cada combinación de color y reforzarla con símbolos y texto, aseguramos que la interfaz mantenga una legibilidad consistente en todos los niveles de alerta y reduzca el riesgo de interpretaciones erróneas.
+
+
+3. Jerarquía visual (justificada con la Investigación 1)
+
+El recorrido visual de nuestras pantallas se diseñó tomando como base los principios de percepción visual, patrón de lectura en F, agrupación por proximidad y atributos preatentivos documentados en nuestra Investigación 1. Estructuramos todas las vistas en cuatro niveles descendentes para que el usuario comprenda primero el panorama general y después profundice en los detalles técnicos:
+
+1. **Nivel 1 · Resumen ejecutivo (`summary`):** Abre cada vista sintetizando en cuatro bloques breves el *hallazgo principal*, el *indicador de respaldo*, la *recomendación* y la *limitación*, permitiendo captar la conclusión central en los primeros segundos.
+2. **Nivel 2 · Tarjetas KPI con indicador líder (`kpis`, `lead=True`):** Presentan las métricas clave de cada rol, destacando la métrica decisoria principal mediante mayor peso tipográfico y etiquetas de estado semántico.
+3. **Nivel 3 · Gráficas interactivas y tablas priorizadas:** Cada visualización incluye su título descriptivo, indicador del tipo de dato (`hist`, `deriv` o `pred`) y leyendas técnicas que transparentan el tamaño de muestra ($n$), la partición evaluada y los criterios de supresión.
+4. **Nivel 4 · Fichas metodológicas y cierre accionable (`ficha`, `final_state`):** Relegan la explicación estadística detallada a bloques inferiores o desplegables para evitar saturación visual y cierran el flujo con una acción concreta (propuesta exportable en Laura, cartera priorizada en Armando y decisión del corte en Anna).
+
+Esta organización por capas nos permitió reducir la carga cognitiva del tablero y ofrecer una experiencia uniforme y predecible sin importar desde qué rol se ingrese.
+
+
+4. Manejo de estado vacío (`st.stop()`)
+
+Para impedir que la aplicación falle o renderice visualizaciones vacías ante la ausencia de datos o archivos incompatibles, implementamos guardas explícitas con `st.stop()` en los puntos críticos de `app.py`, junto con mecanismos de recuperación guiada dentro de los filtros:
+
+* **Sin archivo cargado:** En `app.py`, dentro de la función `data_screen()` (línea 114), desplegamos el aviso *"Selecciona un archivo Excel o CSV, o utiliza el archivo de ejemplo para continuar"* y detenemos la ejecución con `st.stop()`.
+* **Archivo que incumple el contrato de datos:** En `app.py`, dentro de `dashboard()` (línea 177), validamos las 16 columnas esperadas mediante `check_bytes()`. Si el archivo no es utilizable (`not res.usable`), mostramos el diagnóstico de columnas fallidas y cortamos el flujo con `st.stop()`.
+* **Falta de secretos o exceso de intentos de acceso:** En `app.py`, dentro de `login_screen()` (líneas 71 y 87), detenemos la ejecución con `st.stop()` si no se encuentra configurado `.streamlit/secrets.toml` o si se supera el límite de intentos (`auth.MAX_ATTEMPTS`).
+* **Filtros internos sin suficiente muestra:** Cuando una combinación en el simulador de Laura devuelve 0 registros (`status == "empty"`) o menos de 30 (`status == "insufficient"`), ocultamos la recomendación para evitar decisiones sin respaldo y habilitamos botones de recuperación inmediata (*Ampliar a todos los días*, *Restablecer simulador* y *Quitar filtros* en el mapa de calor).
+
+Gracias a estas validaciones preventivas, el tablero responde de forma controlada ante cualquier estado límite y guía al usuario para retomar el análisis sin errores inesperados.
+
+
+5. Controles interactivos principales
+
+Diseñamos los controles interactivos del sistema para que cada ajuste tenga un impacto inmediato, transparente y trazable, mostrando siempre el filtro activo y el conteo exacto de registros que respaldan el cálculo:
+
+| Control | Ubicación | Filtro activo y conteo visible | Decisión que habilita |
+| :--- | :--- | :--- | :--- |
+| **1. Simulador de sobreventa y filtros de vuelo** (día, horario, hub, destino, clima, capacidad, costos y tolerancia de riesgo) | Vista de **Laura** (`_controls` y `_map`) | Despliega el descriptor del escenario activo y el tamaño exacto de la muestra histórica (`"{res['n']} pasajeros históricos"` en el simulador; `"{len(f):,} de {len(df):,} pasajeros"` en el mapa de riesgo). | Definir cuántos boletos extra vender en un vuelo específico balanceando el costo esperado frente a la probabilidad de negar abordaje. |
+| **2. Selector global de umbral de alerta (`0.05` – `0.90`) y partición** | Vista de **Anna** (`_alerts`), propagado en tiempo real a **Armando** | Muestra el umbral vigente, quién lo fijó, la partición evaluada (*Prueba* o *Validación*) y el conteo exacto de alertas y *no-shows* (`"{c['alertas']:,} de {c['n']:,}"`, junto con la suma verificada de la matriz de confusión). | Calibrar el punto de corte operativo entre detección de *no-shows* (*recall*) y falsas alarmas (*precision*) para dimensionar la lista de contacto prioritario de Armando. |
+
+Con estos dos ejes de interactividad conectamos la exploración analítica con la operación diaria, permitiendo simular escenarios de negocio y ajustar la sensibilidad del modelo con plena visibilidad de sus consecuencias.
+
+
+6. Matriz de acceso por rol y limitación de Streamlit Community Cloud
+
+Para resguardar los datos personales de los pasajeros y mantener una separación estricta de responsabilidades, implementamos un esquema de permisos centralizado en `core/security.py` que controla tanto la visibilidad de cada módulo como las acciones permitidas por perfil:
+
+| Recurso o acción | Laura (Planificación) | Armando (Experiencia) | Anna (Operación y calidad) |
+| :--- | :---: | :---: | :---: |
+| Simulador de sobreventa y mapa de riesgo histórico | Sí | No | No |
+| Exportar propuesta con **datos agregados** (`exportar_agregados`) | Sí | No | No |
+| Segmentos, reglas de intervención y predicción individual | No | Sí | No |
+| Ver lista priorizada con **seudónimos HMAC** (`ver_individual`) | No | Sí *(máx. 25 filas, sin exportar)* | No |
+| Evaluación del modelo, calibración (ECE) y estabilidad (PSI) | No | No | Sí |
+| Modificar el **umbral de alerta global** | No *(solo lectura)* | No *(solo lectura)* | Sí |
+| Ver detalle de `Customer_ID` repetidos (`ver_detalle_calidad`) | No | No | Sí |
+| Registrar la decisión oficial del corte (`decidir_corte`) | No | No | Sí |
+
+Al desplegar esta arquitectura en Streamlit Community Cloud, documentamos dos limitaciones estructurales propias de la plataforma: no cuenta con un proveedor de identidad nativo (*SSO/RBAC* a nivel infraestructura) ni ofrece almacenamiento persistente de base de datos entre reinicios del contenedor. Por ello, implementamos la autenticación a nivel aplicación leyendo contraseñas cifradas desde los *Secrets* del host —sin almacenar `.streamlit/secrets.toml` en el repositorio— y gestionamos el registro de decisiones de corte dentro de `st.session_state`. De este modo logramos un aislamiento funcional y seguro para el entorno académico, dejando trazada la necesidad de integrar autenticación corporativa y una base de datos persistente en un despliegue productivo real.
+
+
+Conclusión:
+Con el desarrollo de este tercer entregable transformamos el análisis predictivo de *no-show* en una herramienta operativa completa, accesible y gobernada por roles. A lo largo del proyecto logramos alinear las visualizaciones con preguntas concretas de negocio, garantizar el cumplimiento de contraste WCAG 2.2 AA con codificación redundante, establecer una jerarquía visual clara respaldada por la Investigación 1, blindar la aplicación contra estados vacíos mediante `st.stop()` y conectar controles interactivos trazables bajo una matriz de acceso bien definida. El resultado es un tablero sólido y transparente que permite a Air Lincoln pasar de la exploración de datos a la toma de decisiones coordinadas entre planificación, experiencia del pasajero y calidad operativa.
