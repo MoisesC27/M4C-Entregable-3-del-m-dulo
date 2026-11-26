@@ -132,6 +132,10 @@ def data_screen() -> None:
             st.dataframe(contract_table(), hide_index=True, use_container_width=True)
     top_bar(show_change=False)
 
+    st.info("Selecciona un archivo Excel o CSV, o utiliza el archivo de ejemplo para continuar.")
+    st.stop()
+
+
 
 def use_file(data: bytes, name: str) -> None:
     res = check_bytes(data, name) if data else None
