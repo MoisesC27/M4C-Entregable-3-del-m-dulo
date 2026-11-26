@@ -26,14 +26,22 @@ def get_threshold(sha: str) -> dict | None:
     """{'umbral': 0.29, 'por': 'anna', 'cuando': '...'} o None si nadie lo ha cambiado."""
     return _read().get("umbral", {}).get(sha)
 
-
 def set_threshold(sha: str, value: float, user: str, when: str) -> None:
+    if user != "anna":
+        raise PermissionError("Solo Anna puede modificar el umbral de alertas.")
+
     value = round(min(0.9, max(0.05, float(value))), 2)
     with _lock:
         data = _read()
-        data.setdefault("umbral", {})[sha] = {"umbral": value, "por": user, "cuando": when}
-        FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-
+        data.setdefault("umbral", {})[sha] = {
+            "umbral": value,
+            "por": user,
+            "cuando": when
+        }
+        FILE.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8"
+        )
 
 def clear_threshold(sha: str) -> None:
     with _lock:
