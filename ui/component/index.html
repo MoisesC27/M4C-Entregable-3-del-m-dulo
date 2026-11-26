@@ -237,7 +237,7 @@ dialog#pax dd { margin:0; font-weight:600; }
           <div class="kpi s-ok"><span>Ahorro frente a no sobrevender <i class="tg tg-s">Simulado</i></span><b id="sim-save">—</b><small>costo esperado por vuelo</small></div>
         </div>
         <div class="card">
-          <h2>Costo esperado por boletos extra <i class="tg tg-s">Simulado</i></h2>
+          <h2>¿Cuántos boletos adicionales minimizan el costo esperado del vuelo? <i class="tg tg-s">Simulado</i></h2>
           <div class="grow" id="sim-chart"></div>
         </div>
       </div>
@@ -246,6 +246,7 @@ dialog#pax dd { margin:0; font-weight:600; }
     <!-- LAURA · Mapa -->
     <section class="panel g-map" data-sec="map" hidden>
       <div class="card">
+        <h2>¿Qué días y horarios presentan mayor tasa de No-Show?</h2>
         <div class="question cal-top">
           <div class="cal-nav"><button class="btn" id="cal-prev" aria-label="Mes anterior">‹</button><h2 id="cal-title">—</h2><button class="btn" id="cal-next" aria-label="Mes siguiente">›</button></div>
           <span class="legend"><i class="tg tg-d">Dato</i> <span id="cal-legend">—</span> <span class="s-ok">Menos de 7%</span><span class="s-warn">7% a 12%</span><span class="s-bad">Más de 12%</span></span>
@@ -254,6 +255,7 @@ dialog#pax dd { margin:0; font-weight:600; }
         <p class="hint" id="cal-hint">M mañana · T tarde · N noche · — menos de 30 pasajeros, no se publica · borde punteado: fecha sin pasajeros en el archivo (se muestra el patrón de ese día de la semana)</p>
       </div>
       <div class="card">
+        <h2>¿Qué vuelos de la fecha seleccionada requieren mayor atención por su riesgo de No-Show?</h2>
         <h2 id="fl-title">Vuelos del día</h2>
         <p class="hint">Haz clic en un vuelo para planear su sobreventa. <i class="tg tg-s">Simulado</i> itinerario de referencia · <i class="tg tg-c">Calculado</i> no-show previsto</p>
         <div class="rows" id="fl-list"></div>
@@ -263,7 +265,8 @@ dialog#pax dd { margin:0; font-weight:600; }
     <!-- ARMANDO · Contactar -->
     <section class="panel g-contact" data-sec="contact" hidden>
       <div class="card">
-        <div class="question"><h2>Pasajeros con riesgo alto, por acción <i class="tg tg-c">Calculado</i></h2><span class="hint" id="c-hint">—</span></div>
+        <div class="question">
+          <h2>¿Cuántos pasajeros de alto riesgo requieren cada acción preventiva? <i class="tg tg-c">Calculado</i></h2>
         <div class="actions" id="c-actions"></div>
       </div>
       <div class="card">
@@ -305,7 +308,7 @@ dialog#pax dd { margin:0; font-weight:600; }
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span class="big" id="calc-p">—</span><span class="pill" id="calc-lvl">—</span></div>
         <p class="say" id="calc-act">—</p>
         <div class="sep"></div>
-        <h2>Lo que más pesa en su caso <i class="tg tg-c">Calculado</i></h2>
+        <h2>¿Qué factores aumentan o disminuyen el riesgo de No-Show de este pasajero? <i class="tg tg-c">Calculado</i></h2>
         <span class="legend"><span class="s-bad">Sube el riesgo</span><span class="s-ok">Lo baja</span></span>
         <div class="grow" id="calc-chart"></div>
       </div>
@@ -316,7 +319,7 @@ dialog#pax dd { margin:0; font-weight:600; }
       <div class="kpis" id="t-kpis"></div>
       <div class="bottom">
         <div class="card">
-          <h2>Comparación de modelos <i class="tg tg-c">Calculado</i></h2>
+          <h2>¿Qué modelo predice mejor las ausencias de pasajeros? <i class="tg tg-c">Calculado</i></h2>
           <div class="metric-tabs" role="tablist" aria-label="Métrica">
             <button class="mt" data-m="auc" aria-pressed="true">AUC</button><button class="mt" data-m="ks" aria-pressed="false">KS</button>
             <button class="mt" data-m="f1" aria-pressed="false">F1</button><button class="mt" data-m="rec" aria-pressed="false">Recall</button>
@@ -345,7 +348,7 @@ dialog#pax dd { margin:0; font-weight:600; }
         </div>
       </div>
       <div class="card">
-        <h2>Detectados contra falsas alarmas <i class="tg tg-c">Calculado</i></h2>
+        <h2>¿Cómo cambia la detección de No-Show y las falsas alarmas al ajustar el umbral? <i class="tg tg-c">Calculado</i></h2>
         <div class="grow" id="a-chart"></div>
       </div>
     </section>
