@@ -189,7 +189,7 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
           <div class="kpi s-ok"><span>Ahorro frente a no sobrevender <i class="tg tg-s">Simulado</i></span><b id="sim-save">—</b><small>costo esperado por vuelo</small></div>
         </div>
         <div class="card">
-          <h2>Costo esperado por boletos extra <i class="tg tg-s">Simulado</i></h2>
+          <h2>¿Cuántos boletos adicionales minimizan el costo esperado del vuelo? <i class="tg tg-s">Simulado</i></h2>
           <div class="grow" id="sim-chart"></div>
         </div>
       </div>
@@ -201,8 +201,8 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
         <div class="question"><h2>¿Qué días y horarios tienen más no-show? <i class="tg tg-d">Dato</i></h2><span class="legend"><span class="s-ok">Menos de 7%</span><span class="s-warn">7% a 12%</span><span class="s-bad">Más de 12%</span></span></div>
         <div class="grow" id="map-chart"></div>
       </div>
-      <div class="card">
-        <h2>Combinaciones con mayor no-show previsto <i class="tg tg-c">Calculado</i></h2>
+      <div class="card"> 
+        <h2>¿Qué combinaciones de vuelos presentan mayor riesgo previsto de No-Show? <i class="tg tg-c">Calculado</i></h2>
         <div class="rows" id="map-top"></div>
       </div>
     </section>
@@ -210,7 +210,7 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
     <!-- ARMANDO · Contactar -->
     <section class="panel g-contact" data-sec="contact" hidden>
       <div class="card">
-        <div class="question"><h2>Pasajeros con riesgo alto, por acción <i class="tg tg-c">Calculado</i></h2><span class="hint">Probabilidad de no llegar ≥ 36%</span></div>
+       <h2>¿Cuántos pasajeros de alto riesgo requieren cada acción preventiva? <i class="tg tg-c">Calculado</i></h2>
         <div class="actions" id="c-actions"></div>
       </div>
       <div class="card">
@@ -249,7 +249,7 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span class="big" id="calc-p">—</span><span class="pill" id="calc-lvl">—</span></div>
         <p class="say" id="calc-act">—</p>
         <div class="sep"></div>
-        <h2>Lo que más pesa en su caso <i class="tg tg-c">Calculado</i></h2>
+       <h2>¿Qué factores aumentan o disminuyen el riesgo de No-Show de este pasajero? <i class="tg tg-c">Calculado</i></h2>
         <span class="legend"><span class="s-bad">Sube el riesgo</span><span class="s-ok">Lo baja</span></span>
         <div class="grow" id="calc-chart"></div>
       </div>
@@ -260,7 +260,7 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
       <div class="kpis" id="t-kpis"></div>
       <div class="bottom">
         <div class="card">
-          <h2>Comparación de modelos <i class="tg tg-c">Calculado</i></h2>
+          <h2>¿Qué modelo predice mejor las ausencias de pasajeros? <i class="tg tg-c">Calculado</i></h2>
           <p class="hint">AUC en datos de prueba · 1 = perfecto · 0.5 = azar</p>
           <div class="grow" id="t-models"></div>
         </div>
@@ -285,7 +285,7 @@ td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
         </div>
       </div>
       <div class="card">
-        <h2>Detectados contra falsas alarmas <i class="tg tg-c">Calculado</i></h2>
+        <h2>¿Cómo cambia la detección de No-Show y las falsas alarmas al ajustar el umbral? <i class="tg tg-c">Calculado</i></h2>
         <div class="grow" id="a-chart"></div>
       </div>
     </section>

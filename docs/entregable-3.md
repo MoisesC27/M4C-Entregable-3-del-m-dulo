@@ -1,32 +1,53 @@
-https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/45722187808
+https://github.com/MoisesC27/M4C-Entregable-3-del-m-dulo/actions/runs/NUMERO_DE_LA_EJECUCION
 
 # Entregable 3 — AIRLINCOLN
 
+
 ## 1. Preguntas de las gráficas
-Cada gráfica del dashboard AIRLINCOLN responde una pregunta
-relacionada con una decisión operativa.
+
+Cada visualización de AIRLINCOLN responde una pregunta
+relacionada con el objetivo de reducir el impacto
+operativo de las ausencias de pasajeros.
 
 ### Laura — Planificación
 
-| Gráfica | Pregunta | Decisión |
+| Visualización | Pregunta de negocio | Decisión |
 |---|---|---|
-| Costo esperado de sobreventa | ¿Cuántos boletos adicionales conviene vender? | Comparar escenarios de sobreventa y seleccionar una alternativa. |
-| Calendario de vuelos | ¿Qué días presentan mayor riesgo de ausencia? | Identificar fechas y vuelos que requieren revisión. |
+| Costo esperado de sobreventa | ¿Cuántos boletos adicionales minimizan el costo esperado del vuelo? | Seleccionar una cantidad de sobreventa considerando los costos y riesgos. |
+| Mapa de riesgo | ¿Qué días y horarios tienen más no-show? | Identificar los periodos que requieren mayor atención. |
+| Combinaciones de vuelos | ¿Qué combinaciones de vuelos presentan mayor riesgo previsto de No-Show? | Priorizar escenarios para su revisión operativa. |
 
 ### Armando — Experiencia del pasajero
 
-| Gráfica | Pregunta | Decisión |
+| Visualización | Pregunta de negocio | Decisión |
 |---|---|---|
-| Tipos de pasajeros | ¿Qué grupos presentan mayores tasas de ausencia? | Priorizar segmentos para seguimiento preventivo. |
-| Factores individuales | ¿Qué características influyen en el riesgo de un pasajero? | Elegir una acción preventiva según su perfil. |
+| Acciones preventivas | ¿Cuántos pasajeros de alto riesgo requieren cada acción preventiva? | Priorizar el seguimiento de pasajeros. |
+| Comparación de segmentos | ¿Qué tipo de pasajero falta más? | Identificar los grupos con mayores tasas de ausencia. |
+| Factores individuales | ¿Qué factores aumentan o disminuyen el riesgo de No-Show de este pasajero? | Comprender el riesgo individual y orientar el seguimiento. |
 
 ### Anna — Operación y calidad
 
-| Gráfica | Pregunta | Decisión |
+| Visualización | Pregunta de negocio | Decisión |
 |---|---|---|
-| Comparación de modelos | ¿Qué modelo distingue mejor entre pasajeros que llegan y no llegan? | Seleccionar el modelo predictivo con mejor desempeño. |
-| Calibración | ¿Las probabilidades estimadas coinciden con las ausencias observadas? | Revisar la confiabilidad de las probabilidades. |
-| Alertas | ¿Cómo cambia la detección de ausencias al ajustar el umbral? | Equilibrar ausencias detectadas y falsas alarmas. |
+| Comparación de modelos | ¿Qué modelo predice mejor las ausencias de pasajeros? | Comparar los modelos mediante su desempeño predictivo. |
+| Calibración | ¿Las probabilidades coinciden con la realidad? | Evaluar si las probabilidades estimadas reflejan las ausencias observadas. |
+| Detección y falsas alarmas | ¿Cómo cambia la detección de No-Show y las falsas alarmas al ajustar el umbral? | Seleccionar un umbral que equilibre la detección y las alertas innecesarias. |
+
+### Justificación de las visualizaciones
+
+Las visualizaciones se conservaron porque permiten
+responder preguntas relacionadas con las decisiones
+de cada perfil.
+
+Laura analiza escenarios de sobreventa y vuelos.
+Armando identifica pasajeros y grupos que necesitan
+seguimiento.
+Anna evalúa el desempeño de los modelos y los umbrales
+de alerta.
+
+Los títulos de las gráficas están escritos como
+preguntas y se muestran directamente en la aplicación.
+
 ## 2. Paleta y contraste WCAG 2.2 AA
 
 La interfaz de AIRLINCOLN utiliza una paleta de colores
@@ -74,19 +95,31 @@ de colores declaradas.
 La prueba se ejecuta con cada push o pull request
 y devuelve un error si alguna combinación comprobada
 no alcanza su contraste mínimo.
+### Verificación ampliada en GitHub Actions
+
+Se amplió el script `scripts/verificar_contraste.py` para comprobar 40 combinaciones de contraste correspondientes a los componentes de Streamlit y los temas claro y oscuro del dashboard.
+
+La ejecución número 5 de GitHub Actions terminó correctamente con el estado `Success`, utilizando el commit `3cdf426`.
+
+Esta verificación automatizada permite detectar cuando alguna de las combinaciones configuradas deja de cumplir el contraste mínimo establecido.
+
+La validación cubre las combinaciones declaradas en el script; otros elementos gráficos y bordes requieren una revisión adicional.
 
 ### Paleta inclusiva
 
-Se utilizan colores asociados con estados de riesgo:
+### Evidencia de interpretación sin depender del color
 
-- Verde: riesgo bajo.
-- Ámbar: riesgo medio.
-- Rojo: riesgo alto.
-- Azul: información y elementos de referencia.
+Se revisó la gráfica «¿Qué tipo de pasajero falta más?» del perfil Armando para comprobar que las categorías puedan interpretarse sin depender exclusivamente del color.
 
-La información también se comunica mediante textos,
-valores numéricos y etiquetas, evitando depender
-exclusivamente del color.
+La visualización utiliza nombres de grupos, porcentajes, longitud de barras y una línea de referencia correspondiente al promedio general de No-Show del 10 %.
+
+Por ejemplo, el grupo «Compró con 2+ semanas» presenta una tasa del 68 %, mientras que «Coach» presenta una tasa del 8 %. Estos valores pueden identificarse mediante las etiquetas numéricas, incluso si el usuario no distingue los colores de las barras.
+
+La leyenda también describe el significado de las categorías: menos que el promedio, hasta dos veces el promedio y más de dos veces el promedio.
+
+Esta implementación permite interpretar la gráfica utilizando información textual y cuantitativa, además del color.
+
+**Alcance:** se comprobó visualmente esta gráfica. La validación completa de la paleta para distintos tipos de daltonismo requiere revisar también las demás visualizaciones y sus estados.
 
 ### Alcance de la validación
 
@@ -144,11 +177,22 @@ Cada perfil cuenta con funciones específicas:
 
 ### Relación con la investigación 1
 
-La organización del dashboard aplica principios de jerarquía visual, agrupación y facilidad de lectura, priorizando la información necesaria para cada usuario.
+### Fundamentación teórica de la jerarquía visual
 
-La investigación 1 debe respaldar estos principios mediante sus fuentes documentadas, vinculando cada decisión de diseño con la evidencia revisada por el equipo.
+De acuerdo con Gordon (2021), la jerarquía visual permite organizar los elementos de una interfaz para que el usuario identifique la información siguiendo su importancia. Para lograrlo se utilizan recursos como el tamaño, el contraste y la agrupación.
 
-**Referencia de investigación:** agregar aquí el título, autor y fuente específicos de la investigación 1 utilizada por el equipo.
+En AIRLINCOLN aplicamos estos principios de la siguiente manera:
+
+- **Tamaño:** destacamos las recomendaciones de sobreventa, los pasajeros de alto riesgo y las métricas de evaluación mediante indicadores grandes.
+- **Contraste:** diferenciamos la información prioritaria de los elementos secundarios mediante contrastes visuales.
+- **Agrupación:** organizamos las gráficas y los controles relacionados dentro de secciones que corresponden a decisiones específicas.
+- **Orden de lectura:** presentamos primero los resultados relevantes y después los elementos que permiten analizarlos o modificarlos.
+
+Estas decisiones buscan facilitar que Laura, Armando y Anna identifiquen la información necesaria para sus respectivas responsabilidades.
+
+**Referencia bibliográfica:**
+
+Gordon, K. (2021, 17 de enero). *Visual hierarchy in UX: Definition*. Nielsen Norman Group. https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
 
 ### Conclusión
 
@@ -158,24 +202,43 @@ Esto reduce la necesidad de interpretar información técnica y permite que cada
 ## 4. Estado vacío y st.stop()
 ### Control del estado vacío
 
-AIRLINCOLN contempla el estado en el que el usuario todavía no ha seleccionado un archivo de datos.
+AIRLINCOLN contempla el caso en el que el usuario inicia sesión, pero todavía no selecciona un archivo de datos.
 
-El comportamiento esperado consiste en mostrar un mensaje indicando que se debe cargar un archivo Excel o CSV, o seleccionar el conjunto de datos de ejemplo.
+La función `data_screen()` de `app.py` presenta las opciones para cargar un archivo CSV o Excel, así como utilizar el conjunto de datos de ejemplo.
 
-Cuando no existe una fuente de datos seleccionada, la aplicación debe detener el procesamiento mediante `st.stop()`, evitando ejecutar modelos o generar resultados sin información válida.
+Mientras no exista una fuente de datos seleccionada, la aplicación muestra el siguiente mensaje:
 
-### Validación requerida
+**«Selecciona un archivo Excel o CSV, o utiliza el archivo de ejemplo para continuar».**
 
-Para comprobar este comportamiento se realizarán las siguientes verificaciones:
+Después ejecuta `st.stop()` para detener el procesamiento de esa ejecución.
 
-1. Abrir AIRLINCOLN sin cargar un archivo.
-2. Confirmar que aparece el mensaje correspondiente.
-3. Verificar que no se ejecutan las operaciones que requieren datos.
-4. Identificar en el código la condición que utiliza `st.stop()`.
+### Ubicación del código
 
-**Evidencia:** agregar una captura de la pantalla sin datos y otra del fragmento de código que implementa la detención.
+**Archivo:** `app.py`  
+**Función:** `data_screen()`  
+**Ubicación:** después de `top_bar(show_change=False)`.
 
-**Estado:** pendiente de confirmar mediante la revisión de `app.py` y una prueba funcional.
+```python
+top_bar(show_change=False)
+
+st.info("Selecciona un archivo Excel o CSV, o utiliza el archivo de ejemplo para continuar.")
+st.stop()
+```
+
+### Comportamiento esperado
+
+1. Cuando el usuario inicia sesión sin seleccionar datos, aparece la pantalla de carga.
+2. El sistema muestra el mensaje informativo.
+3. El dashboard no ejecuta cálculos con datos inexistentes.
+4. Cuando se selecciona un archivo válido, el sistema permite continuar y genera el dashboard.
+
+También se utiliza `st.stop()` cuando un archivo no cumple las condiciones necesarias para ser analizado.
+
+### Evidencia de validación
+
+Para demostrar este comportamiento se conservará una captura de la aplicación sin archivo seleccionado y otra con el dashboard funcionando después de cargar el archivo de ejemplo.
+
+La prueba se considera completada cuando ambos comportamientos se comprueban en la aplicación publicada.
 ## 5. Controles vinculados al negocio
 ### Control 1. Simulador de sobreventa
 
@@ -209,9 +272,27 @@ El dashboard también distingue entre datos originales, resultados calculados y 
 
 ### Validación pendiente
 
-Se debe realizar una prueba funcional cambiando al menos un valor de cada control y comprobando que se actualicen los resultados relacionados.
+### Validación de filtros y conteos
 
-También debe confirmarse que la interfaz muestre el número de registros correspondientes al filtro activo y no solamente el total histórico del archivo.
+Se comprobó que los controles del simulador muestran los filtros activos y la cantidad de pasajeros históricos que corresponden al escenario seleccionado.
+
+En la prueba se utilizaron los siguientes valores:
+
+- Día: lunes.
+- Horario: mañana (6–12).
+- Salida desde hub: sí.
+- Destino: internacional.
+- Pronóstico del clima: normal.
+
+Para esta combinación, el sistema mostró una base de **12 pasajeros históricos** y generó una recomendación simulada de **108 boletos adicionales** sobre una capacidad de 180 asientos.
+
+Esto demuestra que el conteo correspondiente al escenario se presenta junto con los resultados del simulador.
+
+Debido al tamaño reducido de la muestra, esta recomendación debe interpretarse con precaución y no utilizarse directamente para tomar una decisión operativa sin validación adicional.
+
+También se comprobó que el calendario permite seleccionar fechas y muestra conteos de vuelos correspondientes al periodo seleccionado.
+
+**Resultado:** ambos controles están vinculados a decisiones del negocio, presentan los valores seleccionados y muestran conteos asociados a la información consultada.
 
 ### Evidencias
 
@@ -306,3 +387,28 @@ Se realizarán pruebas iniciando sesión con cada perfil para confirmar que:
 2. Armando accede al seguimiento de pasajeros.
 3. Anna accede a la evaluación del modelo y al ajuste de alertas.
 4. Los usuarios no pueden modificar el umbral oficial sin contar con el permiso correspondiente.
+### Evidencia de pruebas por usuario
+
+Se realizaron pruebas de acceso a AIRLINCOLN con los tres perfiles configurados.
+
+**Laura — Planificación**
+
+Se verificó el acceso al simulador de sobreventa y al calendario de vuelos, herramientas orientadas a la planificación operativa.
+
+**Armando — Experiencia del pasajero**
+
+Se verificó que el usuario accede a las secciones «A quién contactar», «Quién falta más» y «Revisar un pasajero».
+
+En el conjunto de datos de prueba se identificaron 101 pasajeros con riesgo alto, clasificados según la acción preventiva recomendada.
+
+**Anna — Operación y calidad**
+
+Se verificó el acceso a las secciones «¿El modelo es confiable?», «Ajustar alertas» y «Calidad de datos».
+
+El dashboard muestra métricas para evaluar modelos y un control de umbral de alertas, inicialmente establecido en 80 %.
+
+**Resultado**
+
+Las capturas muestran que los tres usuarios reciben interfaces diferenciadas según sus responsabilidades.
+
+La prueba visual confirma la separación de funciones. Para completar la verificación de permisos, es necesario comprobar también que los usuarios sin autorización no puedan modificar el umbral oficial.
