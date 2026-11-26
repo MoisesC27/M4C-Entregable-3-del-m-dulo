@@ -76,9 +76,6 @@ para elementos gráficos relevantes.
 | Gris / blanco | 4.68:1 | 4.5:1 | Cumple |
 
 
-*La combinación gris/blanco debe confirmarse en la
-ejecución posterior al cambio de color a #697586.
-
 **Nota de validación:** La comprobación inicial se amplió posteriormente mediante `scripts/verificar_contraste.py`, que evalúa 40 combinaciones de colores definidas para la interfaz y sus temas claro y oscuro.
 
 GitHub Actions confirmó la ejecución correcta de estas pruebas. La validación automatizada cubre las combinaciones declaradas en el script, pero no constituye una auditoría completa de todos los elementos visuales conforme a WCAG 2.2 AA.
@@ -100,6 +97,18 @@ de colores declaradas.
 La prueba se ejecuta con cada push o pull request
 y devuelve un error si alguna combinación comprobada
 no alcanza su contraste mínimo.
+
+
+### Verificación final del dashboard publicado
+
+Se actualizó `scripts/verificar_contraste.py` para comprobar los colores del componente real `ui/component/index.html`, utilizado por AIRLINCOLN en Streamlit Cloud.
+
+Durante la verificación se detectaron cinco combinaciones insuficientes en el tema claro. Se corrigieron los colores verde, ámbar y rojo y se ejecutó nuevamente la prueba.
+
+**Resultado:** las 40 combinaciones configuradas superaron los mínimos de contraste correspondientes. La ejecución de GitHub Actions del commit `56a18fc` finalizó correctamente.
+
+Esta prueba automatizada verifica las combinaciones declaradas. No representa una auditoría integral de todos los componentes y estados de accesibilidad WCAG 2.2 AA.
+
 ### Verificación ampliada en GitHub Actions
 
 Se amplió el script `scripts/verificar_contraste.py` para comprobar 40 combinaciones de contraste correspondientes a los componentes de Streamlit y los temas claro y oscuro del dashboard.
