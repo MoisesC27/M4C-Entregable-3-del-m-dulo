@@ -180,8 +180,6 @@ Cada perfil cuenta con funciones específicas:
 
 **5. Claridad:** los títulos explican qué representa cada visualización y qué pregunta permite responder.
 
-### Relación con la investigación 1
-
 ### Fundamentación teórica de la jerarquía visual
 
 De acuerdo con Gordon (2021), la jerarquía visual permite organizar los elementos de una interfaz para que el usuario identifique la información siguiendo su importancia. Para lograrlo se utilizan recursos como el tamaño, el contraste y la agrupación.
@@ -394,7 +392,8 @@ Se verificó visualmente que Armando no dispone de la sección exclusiva «Ajust
 
 La restricción de modificación del umbral también está implementada en `app.py` mediante la condición `user == "anna"`.
 
-**Pendiente:** realizar una prueba funcional negativa de modificación no autorizada para comprobar la protección más allá de la interfaz.
+**Prueba funcional completada:** se comprobó que Laura y Armando no pueden modificar el umbral oficial de alertas. Ambos intentos fueron rechazados mediante `PermissionError` en `core/settings.py`. Los resultados y la limitación de esta prueba se documentan en el apartado siguiente.
+
 
 ### Prueba negativa de permisos sobre el umbral
 
@@ -440,8 +439,7 @@ El dashboard muestra métricas para evaluar modelos y un control de umbral de al
 
 Las capturas muestran que los tres usuarios reciben interfaces diferenciadas según sus responsabilidades.
 
-La prueba visual confirma la separación de funciones. Para completar la verificación de permisos, es necesario comprobar también que los usuarios sin autorización no puedan modificar el umbral oficial.
-
+La prueba visual confirma la separación de funciones entre los tres perfiles. Adicionalmente, se realizaron pruebas funcionales que confirmaron que Laura y Armando no pueden modificar el umbral oficial de alertas, ya que `core/settings.py` rechaza ambas operaciones mediante `PermissionError`. Estas pruebas complementan la evidencia visual, aunque no constituyen una auditoría integral de seguridad.
 
 ### Evidencia de separación de roles
 
@@ -453,4 +451,6 @@ Se probó la aplicación publicada en Streamlit Cloud con dos usuarios autentica
 
 Esta prueba confirma la separación visual de las funciones por perfil. La autorización para modificar el umbral también se comprueba en el código Python mediante la condición `user == "anna"`.
 
-**Limitación:** la evidencia visual no demuestra por sí sola que todos los accesos no autorizados estén bloqueados; se requiere una prueba funcional negativa para verificarlo completamente.
+
+**Limitación:** la separación visual de los perfiles se complementó con pruebas funcionales que confirmaron el rechazo de modificaciones no autorizadas del umbral mediante `PermissionError`. Sin embargo, estas pruebas verifican una operación específica y no constituyen una auditoría completa de seguridad de la aplicación.
+
