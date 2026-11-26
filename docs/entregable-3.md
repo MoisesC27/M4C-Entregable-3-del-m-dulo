@@ -73,10 +73,16 @@ para elementos gráficos relevantes.
 | Verde / blanco | 7.13:1 | 4.5:1 | Cumple |
 | Ámbar / blanco | 6.79:1 | 4.5:1 | Cumple |
 | Rojo / blanco | 7.12:1 | 4.5:1 | Cumple |
-| Gris / blanco | Superior a 3:1* | 3:1 | Cumple* |
+| Gris / blanco | 4.68:1 | 4.5:1 | Cumple |
+
 
 *La combinación gris/blanco debe confirmarse en la
 ejecución posterior al cambio de color a #697586.
+
+**Nota de validación:** La comprobación inicial se amplió posteriormente mediante `scripts/verificar_contraste.py`, que evalúa 40 combinaciones de colores definidas para la interfaz y sus temas claro y oscuro.
+
+GitHub Actions confirmó la ejecución correcta de estas pruebas. La validación automatizada cubre las combinaciones declaradas en el script, pero no constituye una auditoría completa de todos los elementos visuales conforme a WCAG 2.2 AA.
+
 
 ### Verificación automática
 
@@ -191,7 +197,7 @@ Estas decisiones buscan facilitar que Laura, Armando y Anna identifiquen la info
 
 **Referencia bibliográfica:**
 
-Gordon, K. (2021, 17 de enero). *Visual hierarchy in UX: Definition*. Nielsen Norman Group. https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
+Gordon, K. (2021, 17 de enero). *Visual Hierarchy in UX: Definition*. Nielsen Norman Group. https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
 
 ### Conclusión
 
@@ -268,8 +274,6 @@ Al seleccionar un día, el panel lateral presenta los vuelos correspondientes, s
 Los controles muestran sus valores seleccionados y los indicadores se presentan junto con el escenario analizado.
 
 El dashboard también distingue entre datos originales, resultados calculados y escenarios simulados mediante las etiquetas DATO, CALCULADO y SIMULADO.
-
-### Validación pendiente
 
 ### Validación de filtros y conteos
 
@@ -378,14 +382,20 @@ La diferenciación visual entre perfiles debe complementarse con verificaciones 
 
 Las credenciales privadas deben permanecer fuera del repositorio público.
 
-### Evidencia pendiente
+### Estado de las pruebas de acceso
 
-Se realizarán pruebas iniciando sesión con cada perfil para confirmar que:
+Se comprobó el acceso a la aplicación publicada en Streamlit Cloud con los tres perfiles:
 
-1. Laura accede a planificación y sobreventa.
-2. Armando accede al seguimiento de pasajeros.
-3. Anna accede a la evaluación del modelo y al ajuste de alertas.
-4. Los usuarios no pueden modificar el umbral oficial sin contar con el permiso correspondiente.
+- **Laura:** acceso al simulador de sobreventa y al calendario de vuelos.
+- **Armando:** acceso a contactos, segmentos de riesgo y evaluación individual de pasajeros.
+- **Anna:** acceso a evaluación de modelos, ajuste de alertas y calidad de datos.
+
+Se verificó visualmente que Armando no dispone de la sección exclusiva «Ajustar alertas», mientras que Anna sí puede acceder a ella.
+
+La restricción de modificación del umbral también está implementada en `app.py` mediante la condición `user == "anna"`.
+
+**Pendiente:** realizar una prueba funcional negativa de modificación no autorizada para comprobar la protección más allá de la interfaz.
+
 ### Evidencia de pruebas por usuario
 
 Se realizaron pruebas de acceso a AIRLINCOLN con los tres perfiles configurados.
@@ -411,3 +421,16 @@ El dashboard muestra métricas para evaluar modelos y un control de umbral de al
 Las capturas muestran que los tres usuarios reciben interfaces diferenciadas según sus responsabilidades.
 
 La prueba visual confirma la separación de funciones. Para completar la verificación de permisos, es necesario comprobar también que los usuarios sin autorización no puedan modificar el umbral oficial.
+
+
+### Evidencia de separación de roles
+
+Se probó la aplicación publicada en Streamlit Cloud con dos usuarios autenticados.
+
+**Armando — Experiencia del pasajero:** puede acceder a «A quién contactar», «Quién falta más» y «Revisar un pasajero». No aparece la sección «Ajustar alertas», reservada para Anna.
+
+**Anna — Operación y calidad:** puede acceder a «¿El modelo es confiable?», «Ajustar alertas» y «Calidad de datos». Se comprobó que «Ajustar alertas» muestra el control del umbral, los resultados de detección y la gráfica correspondiente.
+
+Esta prueba confirma la separación visual de las funciones por perfil. La autorización para modificar el umbral también se comprueba en el código Python mediante la condición `user == "anna"`.
+
+**Limitación:** la evidencia visual no demuestra por sí sola que todos los accesos no autorizados estén bloqueados; se requiere una prueba funcional negativa para verificarlo completamente.
